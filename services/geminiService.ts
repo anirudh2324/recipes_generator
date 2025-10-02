@@ -31,6 +31,11 @@ const recipeSchema = {
       type: Type.ARRAY,
       description: "Step-by-step instructions to prepare the dish.",
       items: { type: Type.STRING }
+    },
+    tags: {
+        type: Type.ARRAY,
+        description: "A list of 3-5 relevant tags for the recipe. Examples: 'Quick Meal', 'Vegetarian', 'Spicy', 'Ramen', 'Genin-Friendly'. Derive these from the ingredients, meal type, or description.",
+        items: { type: Type.STRING }
     }
   },
   required: ["recipeName", "description", "prepTime", "cookTime", "servings", "ingredients", "instructions"]
@@ -53,7 +58,7 @@ export const generateRecipe = async (ingredients: string, mealType: string, diet
     - For an **Advanced (Jonin)**, feel free to include more challenging steps or sophisticated culinary jutsus.
 
     The recipe should primarily use the available ingredients, but you can add a few common pantry staples (like oil, salt, pepper, spices) if necessary.
-    Give the recipe a cool, ninja-themed name. Let's show them what a true Ramen master can do!
+    Give the recipe a cool, ninja-themed name and a few helpful tags (like 'Quick Meal', 'Spicy', 'Vegetarian'). Let's show them what a true Ramen master can do!
   `;
 
   try {

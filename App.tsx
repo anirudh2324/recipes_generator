@@ -45,9 +45,23 @@ const App: React.FC = () => {
   const handleSaveRecipe = (recipeToSave: Recipe) => {
     const isAlreadySaved = savedRecipes.some(r => r.recipeName === recipeToSave.recipeName);
     if (!isAlreadySaved) {
-      const updatedRecipes = [...savedRecipes, recipeToSave];
+      const recipeWithFavorite = { ...recipeToSave, isFavorite: false };
+      const updatedRecipes = [...savedRecipes, recipeWithFavorite];
       setSavedRecipes(updatedRecipes);
       localStorage.setItem('savedNarutoRecipes', JSON.stringify(updatedRecipes));
+    }
+  };
+
+  const handleToggleFavorite = (recipeNameToToggle: string) => {
+    const updatedRecipes = savedRecipes.map(r =>
+      r.recipeName === recipeNameToToggle ? { ...r, isFavorite: !r.isFavorite } : r
+    );
+    setSavedRecipes(updatedRecipes);
+    localStorage.setItem('savedNarutoRecipes', JSON.stringify(updatedRecipes));
+
+    // Also update the currently viewed recipe if it's the one being favorited
+    if (recipe && recipe.recipeName === recipeNameToToggle) {
+        setRecipe(prevRecipe => ({ ...prevRecipe!, isFavorite: !prevRecipe!.isFavorite }));
     }
   };
   
@@ -64,6 +78,8 @@ const App: React.FC = () => {
   };
 
 
+  const isCurrentRecipeSaved = savedRecipes.some(r => recipe && r.recipeName === recipe.recipeName);
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-brand-text">
       <Header onShowSaved={() => setShowSaved(true)} savedCount={savedRecipes.length} />
@@ -79,7 +95,7 @@ const App: React.FC = () => {
                 <span className="block sm:inline">{error}</span>
               </div>
             )}
-            {recipe && <RecipeCard recipe={recipe} onSave={handleSaveRecipe} />}
+            {recipe && <RecipeCard recipe={recipe} onSave={handleSaveRecipe} onToggleFavorite={handleToggleFavorite} isSaved={isCurrentRecipeSaved} />}
             {!isLoading && !error && !recipe && (
               <div className="text-center text-gray-500 py-10 px-6 bg-white rounded-xl shadow-sm border border-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-16 w-16 text-brand-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

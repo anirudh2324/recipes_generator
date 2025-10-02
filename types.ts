@@ -1,4 +1,3 @@
-
 export interface Recipe {
   recipeName: string;
   description: string;
@@ -10,4 +9,6 @@ export interface Recipe {
     amount: string;
   }[];
   instructions: string[];
+  tags?: string[];
+  isFavorite?: boolean;
 }
